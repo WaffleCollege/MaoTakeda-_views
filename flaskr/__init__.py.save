@@ -1,0 +1,75 @@
+
+
+from flask import Flask
+
+
+def create_app(test_config=None):
+    # Flaskアプリを作って設定する
+    app = Flask(__name__, instance_relative_config=True)
+    app.config.from_mapping(
+        SECRET_KEY='dev',
+        DATABASE=os.path.join(app.instance_path, 'flaskr.sqlite'),
+    )
+
+    if test_config is None:
+        # load the instance config, if it exists, when not testing
+        app.config.from_pyfile('config.py', silent=True)
+    else:
+        # load the test config if passed in
+        app.config.from_mapping(test_config)
+
+    # ensure the instance folder exists
+    try:
+        os.makedirs(app.instance_path)
+    except OSError:
+        pass
+
+    # /にアクセスした時に"Hello, World!"を返すシンプルなコード
+    @app.route('/')
+    def hello():
+        return 'Hello, World!'
+    def create_app():
+    app = ...
+    #↑ここは以前のまま
+
+    # CLI コマンドを登録
+    return app
+    import os
+from flask import Flask
+
+def create_app(test_config=None):
+    # Flaskアプリを作って設定する
+    app = Flask(__name__, instance_relative_config=True)
+    app.config.from_mapping(
+        SECRET_KEY='dev',
+        DATABASE=os.path.join(app.instance_path, 'flaskr.sqlite'),
+    )
+
+    if test_config is None:
+        # 本番用の設定ファイルを読み込む（あれば）
+        app.config.from_pyfile('config.py', silent=True)
+    else:
+        # テスト用の設定
+        app.config.from_mapping(test_config)
+
+    # instanceフォルダがなければ作る
+    try:
+        os.makedirs(app.instance_path)
+    except OSError:
+        pass
+
+    # / にアクセスしたら "Hello, World!" を返す
+    @app.route('/')
+    def hello():
+        return 'Hello, World!'
+
+    # DB初期化のための import と登録
+    from . import db
+    db.init_app(app)
+
+    # blueprint の登録（blogs.pyの中の blog_bp を使う）
+    from . import blogs
+    app.register_blueprint(blogs.blog_bp)
+
+    return app
+
